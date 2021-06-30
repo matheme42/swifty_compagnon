@@ -113,6 +113,7 @@ class SwiftyCompagnonBackend extends Backend {
 
 		// a link to the global context of the app
 		SwiftyCompagnonContext context = SwiftyCompagnonContext.ofRootContext;
+
 		if (!context.tokenIsValid)
 			return [];
 

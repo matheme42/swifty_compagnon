@@ -68,51 +68,53 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return GetAccessToken(
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/triangle_background.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: FractionallySizedBox(
-          widthFactor: 1,
-          heightFactor: 1,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: AnimSearchBar(
-                      width: MediaQuery.of(context).size.width * 0.98,
-                      textController: textController,
-                      helpText: "",
-                      autoFocus: true,
-                      color: Colors.white70,
-                      onSuffixTap: () {
-                        textController.clear();
-                      }),
-                ),
-                Flexible(
-                  flex: 9,
-                  child: FutureBuilder<List>(
-                      future: SwiftyCompagnonBackend()
-                          .getUsersInfo(textController.text.trim()),
-                      builder: (context, state) {
-                        if (state.connectionState == ConnectionState.done) {
-                          return ListUser(users: state.data!.cast<User>());
-                        }
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }),
-                ),
-              ],
+      child: Builder(builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/triangle_background.png"),
+              fit: BoxFit.cover,
             ),
           ),
-        ),
-      ),
+          child: FractionallySizedBox(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: AnimSearchBar(
+                        width: MediaQuery.of(context).size.width * 0.98,
+                        textController: textController,
+                        helpText: "",
+                        autoFocus: true,
+                        color: Colors.white70,
+                        onSuffixTap: () {
+                          textController.clear();
+                        }),
+                  ),
+                  Flexible(
+                    flex: 9,
+                    child: FutureBuilder<List>(
+                        future: SwiftyCompagnonBackend()
+                            .getUsersInfo(textController.text.trim()),
+                        builder: (context, state) {
+                          if (state.connectionState == ConnectionState.done) {
+                            return ListUser(users: state.data!.cast<User>());
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }),
     );
   }
 }

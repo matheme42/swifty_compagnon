@@ -24,70 +24,70 @@ class UserInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.addListener(function);
-    return WillPopScope(
-        onWillPop: () async {
-          SwiftyCompagnonContext.ofRootContext.currentUser = null;
-          return false;
-        },
-        child: GetAccessToken(
-          child: FutureBuilder(
-              future: SwiftyCompagnonBackend().getUserInfo(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/triangle_background.png"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Shimmer.fromColors(
-                      highlightColor: Colors.white70,
-                      baseColor: Colors.black12,
-                      child: FractionallySizedBox(
-                          heightFactor: 1,
-                          widthFactor: 1,
-                          child: Center(child: CircularProgressIndicator())),
-                    ),
-                  );
-                }
-                User user = SwiftyCompagnonContext.ofRootContext.currentUser;
-                List<Widget> list = [];
-                user.cursusUser.forEach((_, cursusUser) {
-                  list.add(CursusInfo(info: cursusUser));
-                });
-                list.reversed;
-                list.insert(0, UserInfoFirstTile());
+    return WillPopScope(onWillPop: () async {
+      SwiftyCompagnonContext.ofRootContext.currentUser = null;
+      return false;
+    }, child: GetAccessToken(
+      child: Builder(builder: (context) {
+        return FutureBuilder(
+            future: SwiftyCompagnonBackend().getUserInfo(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
                 return Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/triangle_background.png"),
-                        fit: BoxFit.cover,
-                      ),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/triangle_background.png"),
+                      fit: BoxFit.cover,
                     ),
+                  ),
+                  child: Shimmer.fromColors(
+                    highlightColor: Colors.white70,
+                    baseColor: Colors.black12,
                     child: FractionallySizedBox(
                         heightFactor: 1,
                         widthFactor: 1,
-                        child: Column(
-                          children: [
-                            Flexible(
-                              flex: 4,
-                              child: UserGlobalInfo(
-                                currentPage: currentPage,
-                                indicatorLength: list.length,
-                              ),
+                        child: Center(child: CircularProgressIndicator())),
+                  ),
+                );
+              }
+              User user = SwiftyCompagnonContext.ofRootContext.currentUser;
+              List<Widget> list = [];
+              user.cursusUser.forEach((_, cursusUser) {
+                list.add(CursusInfo(info: cursusUser));
+              });
+              list.reversed;
+              list.insert(0, UserInfoFirstTile());
+              return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/triangle_background.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: FractionallySizedBox(
+                      heightFactor: 1,
+                      widthFactor: 1,
+                      child: Column(
+                        children: [
+                          Flexible(
+                            flex: 4,
+                            child: UserGlobalInfo(
+                              currentPage: currentPage,
+                              indicatorLength: list.length,
                             ),
-                            Flexible(
-                              flex: 10,
-                              child: PageView(
-                                  controller: controller,
-                                  pageSnapping: true,
-                                  children: list),
-                            )
-                          ],
-                        )));
-              }),
-        ));
+                          ),
+                          Flexible(
+                            flex: 10,
+                            child: PageView(
+                                controller: controller,
+                                pageSnapping: true,
+                                children: list),
+                          )
+                        ],
+                      )));
+            });
+      }),
+    ));
   }
 }
 
@@ -119,129 +119,133 @@ class CursusInfo extends StatelessWidget {
             child: AnimatedSwitcher(
               duration: Duration(milliseconds: 500),
               reverseDuration: Duration(milliseconds: 500),
-              child: updater.value == false ? ListView(
-                children: [
-                  Center(
-                    child: AutoSizeText(
-                      info.name,
-                      maxLines: 1,
-                      minFontSize: 1,
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Spacer(flex: 2),
-                      Flexible(
-                        flex: 13,
-                        child: Column(
+              child: updater.value == false
+                  ? ListView(
+                      children: [
+                        Center(
+                          child: AutoSizeText(
+                            info.name,
+                            maxLines: 1,
+                            minFontSize: 1,
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ),
+                        Row(
                           children: [
-                            ListTile(
-                              title: AutoSizeText(
-                                "level",
-                                maxLines: 1,
-                                minFontSize: 1,
-                                group: autoSizeGroup,
-                                style: TextStyle(color: Colors.white30),
-                              ),
-                              subtitle: AutoSizeText(
-                                info.level.toString(),
-                                maxLines: 1,
-                                minFontSize: 1,
-                                group: autoSizeGroup,
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                              leading: Icon(
-                                Icons.stacked_bar_chart,
-                                color: Colors.white70,
+                            Spacer(flex: 2),
+                            Flexible(
+                              flex: 13,
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    title: AutoSizeText(
+                                      "level",
+                                      maxLines: 1,
+                                      minFontSize: 1,
+                                      group: autoSizeGroup,
+                                      style: TextStyle(color: Colors.white30),
+                                    ),
+                                    subtitle: AutoSizeText(
+                                      info.level.toString(),
+                                      maxLines: 1,
+                                      minFontSize: 1,
+                                      group: autoSizeGroup,
+                                      style: TextStyle(color: Colors.white70),
+                                    ),
+                                    leading: Icon(
+                                      Icons.stacked_bar_chart,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  ListTile(
+                                    title: AutoSizeText(
+                                      "grade",
+                                      maxLines: 1,
+                                      minFontSize: 1,
+                                      group: autoSizeGroup,
+                                      style: TextStyle(color: Colors.white30),
+                                    ),
+                                    subtitle: AutoSizeText(
+                                      info.grade != "null" ? info.grade : "",
+                                      maxLines: 1,
+                                      minFontSize: 1,
+                                      group: autoSizeGroup,
+                                      style: TextStyle(color: Colors.white70),
+                                    ),
+                                    leading: Icon(
+                                      Icons.grade_outlined,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                  ListTile(
+                                    title: AutoSizeText(
+                                      "blackhole",
+                                      maxLines: 1,
+                                      minFontSize: 1,
+                                      group: autoSizeGroup,
+                                      style: TextStyle(color: Colors.white30),
+                                    ),
+                                    subtitle: AutoSizeText(
+                                      info.blackHoled != "null"
+                                          ? DateFormat.yMd().format(
+                                              DateTime.parse(
+                                                  info.blackHoled!.toString()))
+                                          : "no",
+                                      maxLines: 1,
+                                      minFontSize: 1,
+                                      group: autoSizeGroup,
+                                      style: TextStyle(color: Colors.white70),
+                                    ),
+                                    leading: Icon(
+                                      Icons.hourglass_top_sharp,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            ListTile(
-                              title: AutoSizeText(
-                                "grade",
-                                maxLines: 1,
-                                minFontSize: 1,
-                                group: autoSizeGroup,
-                                style: TextStyle(color: Colors.white30),
-                              ),
-                              subtitle: AutoSizeText(
-                                info.grade != "null" ? info.grade : "",
-                                maxLines: 1,
-                                minFontSize: 1,
-                                group: autoSizeGroup,
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                              leading: Icon(
-                                Icons.grade_outlined,
-                                color: Colors.white70,
-                              ),
+                            Spacer(),
+                            Flexible(
+                              flex: 13,
+                              child: data.length >= 3
+                                  ? MaterialButton(
+                                      onPressed: () =>
+                                          updater.value = !updater.value,
+                                      child: RadarChart(
+                                        values: data,
+                                        labels: features,
+                                        maxLinesForLabels: 2,
+                                        labelColor: Colors.white70,
+                                        maxValue: 15,
+                                        fillColor: Colors.white70,
+                                        chartRadiusFactor: 0.8,
+                                      ),
+                                    )
+                                  : Container(),
                             ),
-                            ListTile(
-                              title: AutoSizeText(
-                                "blackhole",
-                                maxLines: 1,
-                                minFontSize: 1,
-                                group: autoSizeGroup,
-                                style: TextStyle(color: Colors.white30),
-                              ),
-                              subtitle: AutoSizeText(
-                                info.blackHoled != "null"
-                                    ? DateFormat.yMd().format(DateTime.parse(
-                                        info.blackHoled!.toString()))
-                                    : "no",
-                                maxLines: 1,
-                                minFontSize: 1,
-                                group: autoSizeGroup,
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                              leading: Icon(
-                                Icons.hourglass_top_sharp,
-                                color: Colors.white70,
-                              ),
-                            ),
+                            Spacer(flex: 2),
                           ],
                         ),
+                        UserInfoProject(
+                          projects: info.projects,
+                        ),
+                      ],
+                    )
+                  : Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: MaterialButton(
+                        onPressed: () => updater.value = !updater.value,
+                        child: RadarChart(
+                          values: data,
+                          labels: features,
+                          maxLinesForLabels: 2,
+                          labelColor: Colors.white70,
+                          maxValue: 15,
+                          fillColor: Colors.white70,
+                          chartRadiusFactor: 0.6,
+                        ),
                       ),
-                      Spacer(),
-                      Flexible(
-                        flex: 13,
-                        child: data.length >= 3
-                            ? MaterialButton(
-                                onPressed: () => updater.value = !updater.value,
-                                child: RadarChart(
-                                  values: data,
-                                  labels: features,
-                                  maxLinesForLabels: 2,
-                                  labelColor: Colors.white70,
-                                  maxValue: 15,
-                                  fillColor: Colors.white70,
-                                  chartRadiusFactor: 0.8,
-                                ),
-                              )
-                            : Container(),
-                      ),
-                      Spacer(flex: 2),
-                    ],
-                  ),
-                  UserInfoProject(
-                    projects: info.projects,
-                  ),
-                ],
-              ) : Padding(
-                padding: EdgeInsets.all(8.0),
-                child: MaterialButton(
-                  onPressed: () => updater.value = !updater.value,
-                  child: RadarChart(
-                    values: data,
-                    labels: features,
-                    maxLinesForLabels: 2,
-                    labelColor: Colors.white70,
-                    maxValue: 15,
-                    fillColor: Colors.white70,
-                    chartRadiusFactor: 0.6,
-                  ),
-                ),
-              ),
+                    ),
             ),
           );
         });
